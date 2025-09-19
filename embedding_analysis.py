@@ -10,7 +10,7 @@ from sklearn.manifold import TSNE
 from sklearn.metrics import silhouette_score
 from sklearn.preprocessing import StandardScaler
 from scipy.spatial.distance import pdist, squareform
-from scipy.stats import kurtosis, skew, f_oneway
+from scipy.stats import kurtosis, skew, f_oneway, zscore
 from statsmodels.tsa.stattools import adfuller
 import json
 
@@ -99,6 +99,7 @@ def advanced_clustering(X, method='hierarchical'):
 def analyze_features(features, output_dir):
     os.makedirs(output_dir, exist_ok=True)
     feature_matrix = np.array(list(features.values()))
+    episode_names = np.array(list(features.keys()))
     plt.figure(figsize=(12,4))
     plt.hist(feature_matrix.flatten(), bins=100, log=True)
     plt.title('Feature Value Distribution')
@@ -140,7 +141,17 @@ def analyze_features(features, output_dir):
     # 6. 降维可视化
     tsne = TSNE(n_components=2, perplexity=min(30, len(features)-1), random_state=42)
     tsne_results = tsne.fit_transform(X_normalized)
+    # 计算每个特征的均值和Z-score
+    feature_means = feature_matrix.mean(axis=1)  # 也可以改成 np.linalg.norm(feature_matrix, axis=1)
+    zscores = zscore(feature_means)
     
+    outlier_mask = np.abs(zscores) > 2
+    if np.any(outlier_mask):
+        print("\n[Z-score 异常检测结果]")
+        for ep, mean_val, z in zip(episode_names[outlier_mask], feature_means[outlier_mask], zscores[outlier_mask]):
+            print(f"  Episode: {ep:15s} | Mean={mean_val:.4f} | Z-score={z:.2f}")
+    else:
+        print("\n[Z-score 异常检测结果] 未发现明显异常 (|z| > 2)")
     # 7. 生成分析报告
     report = {
         "statistics": stats,

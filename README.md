@@ -13,6 +13,7 @@
   - 视角贡献度评估
   - 时序一致性分析
   - t-SNE 可视化和聚类分布图
+  - Z-score 离散程度检验
 
 ## 文件结构
 .
@@ -24,10 +25,21 @@
 
 ## 安装依赖
 建议使用 Python >= 3.10 并创建虚拟环境：
-```bash
-pip install torch torchvision transformers tqdm pillow numpy pandas matplotlib seaborn scikit-learn scipy statsmodels
-使用方法
-1. 特征提取
+pip install -r requirements-min.txt
+
+## 使用方法
+
+1. 使用 process_data.sh 脚本进行一键数据处理
+
+process_data.sh 脚本可用于从原始数据到分析结果的全流程自动化。你只需要提供一个路径列表文件，脚本将依次执行以下步骤：
+
+使用 mcap_to_aloha_data.py 处理原始数据。
+
+使用 extract.py 提取特征。
+
+使用 embedding_analysis.py 进行特征分析。
+
+2. 特征提取
 从 aloha 数据目录提取多视角特征：
 
 python extract.py --data_root /path/to/data_root --output_dir fused_features --n_segments 3
@@ -39,7 +51,7 @@ python extract.py --data_root /path/to/data_root --output_dir fused_features --n
 
 输出为每个 episode 的 _fused.npy 文件。
 
-2. 特征分析
+3. 特征分析
 对提取的融合特征进行高级分析：
 
 
