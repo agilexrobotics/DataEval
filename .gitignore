@@ -153,4 +153,4 @@ rollouts/
 wandb/
  
 # mcap files
-mcap_visualization/
+mcap_visualization/data_sample
