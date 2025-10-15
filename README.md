@@ -75,3 +75,4 @@ advanced_visualization.png：聚类结果可视化图
 episode1/
 └── camera/color/{front,left,right}/*.png
 特征提取依赖 openvla/openvla-7b 模型，需联网下载权重。
+模型部署详情参考[![Model: OpenVLA-7B](https://img.shields.io/badge/HuggingFace-OpenVLA--7B-blue?logo=huggingface)](https://huggingface.co/openvla/openvla-7b)
